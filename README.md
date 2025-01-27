@@ -11,10 +11,13 @@
       * [React code](#react-code)
       * [JSX code](#jsx-code)
   * [Babel](#babel)
-    * [Main Purpose:](#main-purpose)
-      * [Modern JS/JSX code](#modern-jsjsx-code)
-      * [Babel transforms it to](#babel-transforms-it-to)
-    * [Key Features:](#key-features)
+    * [Main Purpose](#main-purpose)
+    * [Key Features](#key-features)
+  * [React Component - templates/factories that produce Elements](#react-component---templatesfactories-that-produce-elements)
+    * [Class Components (Legacy Approach)](#class-components-legacy-approach)
+    * [Function Components (Modern Approach)](#function-components-modern-approach)
+  * [React Element V/S React Component](#react-element-vs-react-component)
+<!-- TOC -->
 
 ## [React](https://react.dev/) 
 is a barebone minimal js library. Not a framework.
@@ -110,7 +113,7 @@ const greeting = () => <h1>Hello, {name}!</h1>;
 - Converting modern JavaScript modules
 - Polyfill support for new JavaScript features
 
-## React Component
+## React Component - templates/factories that produce Elements
 ### Class Components (Legacy Approach)
   ```jsx
   Class Welcome extends React.Component {
@@ -135,3 +138,34 @@ const greeting = () => <h1>Hello, {name}!</h1>;
   ```
 
 ## React Element V/S React Component
+Key Differences:
+- React Elements
+  - Are plain objects describing what you want to see on the screen
+  - Created using JSX or React.createElement()
+  - Immutable
+  - Cheaper and simpler
+  - Like the blueprint of what to render
+- React Components
+  - Are functions or classes that take props and return React Elements
+  - Can hold logic, state, and lifecycle methods
+  - Can be reused
+  - Like a factory that creates elements
+  - Always start with a capital letter
+```jsx
+// This is a React Element
+const element = <h1>Hello World</h1>;
+
+// This is a React Component
+function Greeting() {
+  // Components can contain elements and other components
+  return (
+    <div>
+      {element}
+      <h2>Welcome to React</h2>
+    </div>
+  );
+}
+
+// Using the component creates an element
+const elementFromComponent = <Greeting />;
+```
