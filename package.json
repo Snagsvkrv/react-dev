@@ -1,0 +1,27 @@
+{
+  "name": "react-dev",
+  "version": "1.0.0",
+  "description": "Learning for react development",
+  "scripts": {
+    "test": "jest",
+    "dev": "parcel index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Snagsvkrv/react-dev.git"
+  },
+  "author": "Snagsvkrv",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Snagsvkrv/react-dev/issues"
+  },
+  "homepage": "https://github.com/Snagsvkrv/react-dev#readme",
+  "devDependencies": {
+    "parcel": "^2.13.3",
+    "process": "^0.11.10"
+  },
+  "dependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  }
+}
