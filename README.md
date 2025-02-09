@@ -169,3 +169,126 @@ function Greeting() {
 // Using the component creates an element
 const elementFromComponent = <Greeting />;
 ```
+
+## What is Props in react?
+are React's way of passing data from a parent component to a child component. They're essentially the React equivalent of function parameters.
+```jsx
+function ParentComponent() {
+  return (
+    <ChildComponent name="John" age={25} />
+  );
+}
+
+// Child component
+function ChildComponent(props) {
+  return (
+    <div>
+      <p>Name: {props.name}</p>
+      <p>Age: {props.age}</p>
+    </div>
+  );
+}
+```
+#### Key things to understand about props:
+
+- Props are read-only - a child component can never modify the props it receives
+- Props can be any type of data - strings, numbers, arrays, objects, functions
+- Props help make components reusable since you can pass different values each time
+
+You can also destructure props for cleaner code:
+```jsx
+function ChildComponent({ name, age }) {
+  return (
+    <div>
+      <p>Name: {name}</p>
+      <p>Age: {age}</p>
+    </div>
+  );
+}
+```
+
+## Keys in React 
+serve a crucial purpose for performance and correct behavior when rendering lists of elements. Let me explain with clear examples:
+- Performance and Reconciliation
+  ```jsx
+  // Without keys - React doesn't know which items changed
+  const TodoList = () => {
+  const todos = ['Write code', 'Test app', 'Deploy'];
+  return (
+    <ul>
+      {todos.map(todo => (
+        <li>{todo}</li>  // React will re-render all items unnecessarily
+      ))}
+    </ul>
+    );
+  };
+
+  // With keys - React can identify each item
+  const TodoList = () => {
+  const todos = ['Write code', 'Test app', 'Deploy'];
+  return (
+    <ul>
+      {todos.map((todo, index) => (
+        <li key={index}>{todo}</li>  // React can track individual items
+       ))}
+    </ul>
+    );
+  };
+  ```
+- State Preservation
+  ```jsx
+  import React, { useState } from 'react';
+  import { Button } from '@/components/ui/button';
+  
+  const CounterItem = ({ name }) => {
+    const [count, setCount] = useState(0);
+    return (
+      <div className="p-4 border rounded-lg mb-2 flex items-center justify-between">
+        <span>{name}: {count}</span>
+        <Button onClick={() => setCount(count + 1)}>Increment</Button>
+      </div>
+    );
+  };
+  
+  const KeysDemoApp = () => {
+  const [items, setItems] = useState(['Item A', 'Item B', 'Item C']);
+  
+  const moveFirstToLast = () => {
+    setItems(prev => {
+      const newItems = [...prev];
+      const first = newItems.shift();
+      newItems.push(first);
+      return newItems;
+    });
+  };
+  
+  return (
+    <div className="p-4 max-w-md mx-auto">
+      <div className="mb-4">
+        <Button onClick={moveFirstToLast}>Move First Item to Last</Button>
+      </div>
+  
+      <div className="mb-8">
+        <h3 className="font-bold mb-2">Without Keys:</h3>
+        {items.map((item) => (
+					<CounterItem name={item} />
+        ))}
+      </div>
+  
+      <div>
+        <h3 className="font-bold mb-2">With Keys:</h3>
+        {items.map((item) => (
+            <CounterItem key={item} name={item} />
+        ))}
+      </div>
+    </div>
+    );
+  };
+  
+  export default KeysDemoApp;
+  ```
+- Rules:
+  - Keys must be unique among siblings
+  - Keys should be stable, predictable, and unique
+  - Don't generate keys on the fly (like Math.random())
+  - Don't use indexes as keys if the list can change. This is an <b>ANTI PATTERN</b>
