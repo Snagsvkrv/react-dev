@@ -1,4 +1,26 @@
-
+<!-- TOC -->
+  * [React](#react-)
+  * [react.development.js](#reactdevelopmentjs)
+  * [react-dom.development.js](#react-domdevelopmentjs)
+  * [What is crossorigin in script tag?](#what-is-crossorigin-in-script-tag)
+  * [Parcel](#parcel)
+    * [Here's how it typically works:](#heres-how-it-typically-works)
+  * [JSX](#jsx)
+      * [React code](#react-code)
+      * [JSX code](#jsx-code)
+  * [Babel](#babel)
+    * [Main Purpose](#main-purpose)
+    * [Key Features](#key-features)
+  * [React Component - templates/factories that produce Elements](#react-component---templatesfactories-that-produce-elements)
+    * [Class Components (Legacy Approach)](#class-components-legacy-approach)
+    * [Function Components (Modern Approach)](#function-components-modern-approach)
+  * [React Element V/S React Component](#react-element-vs-react-component)
+  * [What is Props in react?](#what-is-props-in-react)
+      * [Key things to understand about props:](#key-things-to-understand-about-props)
+  * [Keys in React](#keys-in-react-)
+  * [Hooks in React](#hooks-in-react)
+      * [The key rules for using hooks are:](#the-key-rules-for-using-hooks-are)
+<!-- TOC -->
 
 ## [React](https://react.dev/) 
 is a barebone minimal js library. Not a framework.
