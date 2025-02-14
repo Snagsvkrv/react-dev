@@ -1,23 +1,4 @@
-# NOTES:
 
-* [NOTES:](#notes)
-  * [React](#react-)
-  * [react.development.js](#reactdevelopmentjs)
-  * [react-dom.development.js](#react-domdevelopmentjs)
-  * [What is crossorigin in script tag?](#what-is-crossorigin-in-script-tag)
-  * [Parcel](#parcel)
-    * [Here's how it typically works:](#heres-how-it-typically-works)
-  * [JSX](#jsx)
-      * [React code](#react-code)
-      * [JSX code](#jsx-code)
-  * [Babel](#babel)
-    * [Main Purpose](#main-purpose)
-    * [Key Features](#key-features)
-  * [React Component - templates/factories that produce Elements](#react-component---templatesfactories-that-produce-elements)
-    * [Class Components (Legacy Approach)](#class-components-legacy-approach)
-    * [Function Components (Modern Approach)](#function-components-modern-approach)
-  * [React Element V/S React Component](#react-element-vs-react-component)
-<!-- TOC -->
 
 ## [React](https://react.dev/) 
 is a barebone minimal js library. Not a framework.
@@ -292,3 +273,33 @@ serve a crucial purpose for performance and correct behavior when rendering list
   - Keys should be stable, predictable, and unique
   - Don't generate keys on the fly (like Math.random())
   - Don't use indexes as keys if the list can change. This is an <b>ANTI PATTERN</b>
+
+## Hooks in React
+React Hooks are functions that allow you to "hook into" React state and lifecycle features from function components.
+
+Some most commonly used hooks:
+- **useState** - Lets you add state to a function component
+```js
+const [count, setCount] = useState(0);
+```
+- **useEffect** - Handles side effects like data fetching, subscriptions, or DOM manipulation
+```js
+useEffect(() => {
+  document.title = `Count: ${count}`;
+}, [count]); // Only re-run when count changes
+```
+- **useRef** - Creates a mutable reference that persists across renders
+```js
+const inputRef = useRef(null);
+// Later: inputRef.current.focus();
+```
+- **useContext** - Subscribes to React context
+- **useMemo** - Memoizes expensive computations
+- **useCallback** - Memoizes functions to prevent unnecessary re-renders
+- **useReducer** - Manages complex state logic, similar to Redux
+
+#### The key rules for using hooks are:
+
+- Only call hooks at the top level (not inside loops, conditions, or nested functions)
+- Only call hooks from React function components or custom hooks
+- Custom hooks should start with "use" (e.g., useWindowSize)
