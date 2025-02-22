@@ -1,0 +1,7 @@
+1. [React Components, Elements & Instances](https://legacy.reactjs.org/blog/2015/12/18/react-components-elements-and-instances.html)
+2. [React Component](https://legacy.reactjs.org/docs/react-component.html)
+3. [Component And Props](https://legacy.reactjs.org/docs/components-and-props.html)
+4. [State & Lifecycle](https://legacy.reactjs.org/docs/state-and-lifecycle.html)
+5. [Reconciliation](https://legacy.reactjs.org/docs/reconciliation.html)
+6. [React Basics](https://github.com/reactjs/react-basic)
+7. [Design Principles](https://legacy.reactjs.org/docs/design-principles.html)

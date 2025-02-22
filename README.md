@@ -20,6 +20,11 @@
   * [Keys in React](#keys-in-react-)
   * [Hooks in React](#hooks-in-react)
       * [The key rules for using hooks are:](#the-key-rules-for-using-hooks-are)
+  * [React reconciliation algorithm AND React Fiber](#react-reconciliation-algorithm-and-react-fiber)
+    * [Reconciliation Algorithm:](#reconciliation-algorithm)
+    * [React Fiber:](#react-fiber)
+  * [Virtual DOM vs Actual DOM](#virtual-dom-vs-actual-dom)
+  * [Combining above knowledge:](#combining-above-knowledge)
 <!-- TOC -->
 
 ## [React](https://react.dev/) 
@@ -117,6 +122,7 @@ const greeting = () => <h1>Hello, {name}!</h1>;
 - Polyfill support for new JavaScript features
 
 ## React Component - templates/factories that produce Elements
+All React components must act like pure functions with respect to their props.
 ### Class Components (Legacy Approach)
   ```jsx
   Class Welcome extends React.Component {
@@ -126,7 +132,7 @@ const greeting = () => <h1>Hello, {name}!</h1>;
   }
 ```
 ### Function Components (Modern Approach)
-**Should be starting in Capital Letters**
+**Should be starting in Capital Letters** - https://legacy.reactjs.org/docs/jsx-in-depth.html#user-defined-components-must-be-capitalized
   ```jsx
 // Simple Function Component
   function Welcome(props) {
@@ -142,7 +148,7 @@ const greeting = () => <h1>Hello, {name}!</h1>;
 
 ## React Element V/S React Component
 Key Differences:
-- React Elements
+- React Elements: An element is not an actual instance. Rather, it is a way to tell React what you want to see on the screen. You can’t call any methods on the element. `It’s just an immutable description object with two fields: type: (string | ReactClass) and props: Object`
   - Are plain objects describing what you want to see on the screen
   - Created using JSX or React.createElement()
   - Immutable
@@ -325,3 +331,241 @@ const inputRef = useRef(null);
 - Only call hooks at the top level (not inside loops, conditions, or nested functions)
 - Only call hooks from React function components or custom hooks
 - Custom hooks should start with "use" (e.g., useWindowSize)
+
+## React reconciliation algorithm AND React Fiber
+Let me explain React's reconciliation algorithm and React Fiber:
+
+### Reconciliation Algorithm:
+This is React's process of determining what parts of a UI need to be updated when state or props change. Here's how it works:
+
+1. Two trees comparison:
+```javascript
+// Old Virtual DOM
+<div>
+  <h1>Hello</h1>
+  <p>Old text</p>
+</div>
+
+// New Virtual DOM after state change
+<div>
+  <h1>Hello</h1>
+  <p>New text</p>
+</div>
+```
+
+2. Key diffing rules:
+- Different element types are rebuilt completely
+- Same element types are updated with new props
+- List items with keys are tracked across renders
+
+### React Fiber:
+React Fiber is NOT the same as reconciliation - it's actually a complete rewrite of React's core algorithm introduced in React 16. Here are the key differences:
+
+1. Fiber is about HOW updates are scheduled and processed:
+```javascript
+// Example of work that Fiber can break into chunks
+const heavyComponent = () => {
+  // Fiber can pause here if needed
+  expensiveCalculation();
+  
+  // And resume later
+  return <div>{result}</div>;
+};
+```
+
+2. Main features of Fiber:
+- Ability to pause and resume work
+- Ability to assign priority to different types of updates
+- New error boundaries
+- Better support for concurrent mode
+
+Key Differences:
+- Reconciliation: The algorithm that determines WHAT needs to change
+- Fiber: The mechanism for HOW and WHEN those changes are made
+
+An example showing priorities:
+```javascript
+// High priority update (user input)
+const handleInput = (e) => {
+  setInputValue(e.target.value); // Processed immediately
+};
+
+// Low priority update (data fetch)
+const loadData = async () => {
+  const data = await fetchData();
+  setBackgroundData(data); // Can be interrupted if needed
+};
+```
+
+Before Fiber, React would process all updates in a single, uninterruptible sweep. With Fiber:
+1. Work can be split into chunks
+2. Updates can be prioritized
+3. Progress can be saved and resumed
+4. Previous work can be reused or aborted
+
+The relationship is that Fiber is the new implementation of the reconciliation algorithm, providing more granular control over the rendering process.
+
+## Virtual DOM vs Actual DOM
+Key differences between Virtual DOM and Actual DOM with examples:
+
+Virtual DOM:
+- A lightweight JavaScript object representation of the Actual DOM
+- In-memory representation that's much faster to manipulate
+- React creates and works with this first before updating the real DOM
+
+Here's what the same structure looks like in both:
+
+Actual DOM:
+```html
+<div class="user-info">
+    <h1>John Doe</h1>
+    <p class="age">30</p>
+</div>
+```
+
+Virtual DOM representation:
+```javascript
+{
+    type: 'div',
+    props: {
+        className: 'user-info',
+        children: [
+            {
+                type: 'h1',
+                props: {
+                    children: 'John Doe'
+                }
+            },
+            {
+                type: 'p',
+                props: {
+                    className: 'age',
+                    children: '30'
+                }
+            }
+        ]
+    }
+}
+
+// we can also do console.log(<Body />) i.e. any Component to see virtual DOM 
+```
+
+Key Differences:
+
+1. Performance:
+```javascript
+// Actual DOM - Expensive
+document.getElementById('user-age').innerHTML = '31';
+document.getElementById('user-name').innerHTML = 'Jane';
+
+// Virtual DOM - React batches these changes
+setState({
+    age: 31,
+    name: 'Jane'
+    // React will batch and optimize these updates
+});
+```
+
+2. Properties and Manipulation:
+```javascript
+// Actual DOM - Many properties
+const actualElement = document.getElementById('user');
+actualElement.innerHTML = 'New Content';
+actualElement.className = 'new-class';
+actualElement.style.display = 'block';
+
+// Virtual DOM - Simplified representation
+const virtualElement = {
+    type: 'div',
+    props: {
+        children: 'New Content',
+        className: 'new-class',
+        style: { display: 'block' }
+    }
+}
+```
+
+3. Update Process:
+```javascript
+// When state changes in React
+function UserComponent({ name, age }) {
+    // React first updates Virtual DOM
+    return (
+        <div>
+            <h1>{name}</h1>
+            <p>{age}</p>
+        </div>
+    );
+    // Then compares with previous Virtual DOM
+    // Finally updates only necessary parts of Actual DOM
+}
+```
+
+Benefits of Virtual DOM:
+1. Faster manipulation (changes happen in memory first)
+2. Cross-platform compatibility (can be used with non-browser environments)
+3. Batch updates (multiple changes are processed together)
+4. More efficient (only necessary DOM updates are made)
+
+When React updates:
+1. Creates new Virtual DOM tree
+2. Compares (diffs) with previous Virtual DOM tree
+3. Calculates minimal number of necessary changes
+4. Updates only those parts in the Actual DOM
+
+This process makes React's rendering more efficient than directly manipulating the Actual DOM, especially for complex, dynamic UIs with frequent updates.
+
+## Combining above knowledge:
+Top-Down Reconciliation
+
+```jsx
+  // When you call:
+  ReactDOM.render({
+    type: Form,
+    props: {
+      isSubmitted: false,
+      buttonText: 'OK!'
+    }
+  }, document.getElementById('root'));
+  // React will ask the Form component what element tree it returns, given those props.
+  // It will gradually “refine” its understanding of your component tree in terms of simpler primitives:
+
+  // React: You told me this...
+  {
+    type: Form,
+    props: {
+      isSubmitted: false,
+      buttonText: 'OK!'
+    }
+  }
+
+  // React: ...And Form told me this...
+  {
+	type: Button,
+    props: {
+      children: 'OK!',
+      color: 'blue'
+	}
+  }
+
+  // React: ...and Button told me this! I guess I'm done.
+  {
+    type: 'button',
+    props: {
+      className: 'button button-blue',
+      children: {
+        type: 'b',
+        props: {
+          children: 'OK!'
+        }
+      }
+    }
+  }
+
+```
+This is a part of the process that React calls reconciliation which starts when you call `ReactDOM.render() or setState()`.
+By the end of the reconciliation, React knows the resulting DOM tree, and a renderer like react-dom or react-native applies the minimal set of changes necessary to update the DOM nodes (or the platform-specific views in case of React Native).
+
+This gradual refining process is also the reason React apps are easy to optimize. 
+If some parts of your component tree become too large for React to visit efficiently, you can tell it to skip this “refining” and diffing certain parts of the tree if the relevant props have not changed. 
+It is very fast to calculate whether the props have changed if they are immutable, so React and immutability work great together, and can provide great optimizations with the minimal effort.

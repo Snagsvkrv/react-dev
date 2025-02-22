@@ -1,5 +1,7 @@
 React component lifecycle
 
+![reactLifecycle.png](imgs%2FreactLifecycle.png)
+
 lets start by comparing it to the stages of a person's day.
 
 In React, "lifecycle" refers to the different stages a component goes through from when it's created (born) to when it's removed from the screen (dies). Understanding this is crucial because different things need to happen at different stages of a component's life.
